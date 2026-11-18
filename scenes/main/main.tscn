@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/ui/hud.gd" id="2_hud"]
@@ -6,10 +6,13 @@
 
 [sub_resource type="Environment" id="Environment_main"]
 background_mode = 1
-background_color = Color(0.42, 0.62, 0.78, 1)
+background_color = Color(0.48, 0.68, 0.86, 1)
 ambient_light_source = 3
-ambient_light_color = Color(0.75, 0.8, 0.9, 1)
-ambient_light_energy = 0.7
+ambient_light_color = Color(0.82, 0.84, 0.78, 1)
+ambient_light_energy = 0.8
+fog_enabled = true
+fog_light_color = Color(0.58, 0.72, 0.82, 1)
+fog_density = 0.0018
 
 [sub_resource type="BoxShape3D" id="BoxShape_ground"]
 size = Vector3(60, 1, 60)
@@ -32,8 +35,13 @@ script = ExtResource("3_world")
 environment = SubResource("Environment_main")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-rotation_degrees = Vector3(-55, -25, 0)
+rotation_degrees = Vector3(-48, -28, 0)
+light_color = Color(1, 0.88, 0.72, 1)
+light_energy = 1.15
 shadow_enabled = true
+directional_shadow_max_distance = 38.0
+directional_shadow_mode = 0
+groups = ["main_sun"]
 
 [node name="Ground" type="StaticBody3D" parent="."]
 position = Vector3(0, -0.5, 0)
