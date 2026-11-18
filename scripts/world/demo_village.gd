@@ -466,8 +466,8 @@ func _make_ground_details() -> void:
         var z := rng.randf_range(-27.0, 27.0)
         if _is_reserved_detail_area(x, z):
             continue
-        var scale := Vector3(rng.randf_range(0.7, 1.4), rng.randf_range(0.45, 0.85), rng.randf_range(0.7, 1.4))
-        grass_transforms.append(Transform3D(Basis.IDENTITY.scaled(scale), Vector3(x, 0.12, z)))
+        var grass_scale := Vector3(rng.randf_range(0.7, 1.4), rng.randf_range(0.45, 0.85), rng.randf_range(0.7, 1.4))
+        grass_transforms.append(Transform3D(Basis.IDENTITY.scaled(grass_scale), Vector3(x, 0.12, z)))
 
     attempts = 0
     while rock_transforms.size() < 32 and attempts < 500:
@@ -476,8 +476,8 @@ func _make_ground_details() -> void:
         var z := rng.randf_range(-26.0, 26.0)
         if _is_reserved_detail_area(x, z):
             continue
-        var scale := Vector3(rng.randf_range(0.18, 0.38), rng.randf_range(0.14, 0.26), rng.randf_range(0.18, 0.38))
-        rock_transforms.append(Transform3D(Basis.IDENTITY.scaled(scale), Vector3(x, scale.y, z)))
+        var rock_scale := Vector3(rng.randf_range(0.18, 0.38), rng.randf_range(0.14, 0.26), rng.randf_range(0.18, 0.38))
+        rock_transforms.append(Transform3D(Basis.IDENTITY.scaled(rock_scale), Vector3(x, rock_scale.y, z)))
 
     _add_multimesh_detail("GramaInstanciada", _make_low_poly_sphere(0.32, 0.42), grass_transforms, Color(0.35, 0.53, 0.27))
     _add_multimesh_detail("PedrasInstanciadas", _make_low_poly_sphere(0.42, 0.36), rock_transforms, Color(0.43, 0.43, 0.39))
