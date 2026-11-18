@@ -10,7 +10,11 @@ var is_mobile: bool = false
 
 func _ready() -> void:
     is_mobile = OS.get_name() == "Android" or OS.get_name() == "iOS"
-    current_preset = Preset.BALANCED if is_mobile else Preset.HIGH
+    if is_mobile:
+        var active_renderer := RenderingServer.get_current_rendering_method()
+        current_preset = Preset.PERFORMANCE if active_renderer == "gl_compatibility" else Preset.BALANCED
+    else:
+        current_preset = Preset.HIGH
     apply_recommended()
 
 func apply_recommended() -> void:
