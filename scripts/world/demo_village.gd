@@ -491,7 +491,7 @@ func _make_ground_details() -> void:
         var z := rng.randf_range(-26.0, 26.0)
         if _is_reserved_detail_area(x, z):
             continue
-        var flower_scale := Vector3(0.09, 0.06, 0.09)
+        var flower_scale := Vector3(0.6, 0.4, 0.6)
         flower_transforms.append(Transform3D(Basis.IDENTITY.scaled(flower_scale), Vector3(x, 0.08, z)))
 
     _add_multimesh_detail("GramaInstanciada", _make_low_poly_sphere(0.32, 0.42), grass_transforms, Color(0.35, 0.53, 0.27))
