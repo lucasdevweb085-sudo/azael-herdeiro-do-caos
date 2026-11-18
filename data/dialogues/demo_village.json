@@ -1,25 +1,28 @@
 {
   "id": "demo_village_first_meeting",
-  "speaker": "morador_da_vila",
-  "text": "Um viajante ferido pede ajuda. Como Azael responde?",
+  "speaker": "Morador da vila",
+  "text": "Um viajante ferido está caído perto da estrada. O morador observa Azael com preocupação. Como você decide agir?",
   "options": [
     {
       "id": "help",
-      "text": "Ajudar o viajante.",
+      "text": "Ajudar o viajante imediatamente.",
       "set_flags": ["traveler_helped"],
-      "relationship_changes": [{"character": "village", "amount": 2}]
+      "relationship_changes": [{"character": "village", "amount": 2}],
+      "result_text": "Você ajudou o viajante. A confiança da vila em Azael aumentou."
     },
     {
       "id": "question",
       "text": "Perguntar primeiro o que aconteceu.",
       "set_flags": ["traveler_questioned"],
-      "relationship_changes": [{"character": "village", "amount": 1}]
+      "relationship_changes": [{"character": "village", "amount": 1}],
+      "result_text": "Você decidiu ouvir a história antes de agir. A vila percebeu sua cautela."
     },
     {
       "id": "refuse",
       "text": "Recusar ajuda e seguir caminho.",
       "set_flags": ["traveler_refused"],
-      "relationship_changes": [{"character": "village", "amount": -2}]
+      "relationship_changes": [{"character": "village", "amount": -2}],
+      "result_text": "Você recusou ajuda. A confiança da vila em Azael diminuiu."
     }
   ]
 }
