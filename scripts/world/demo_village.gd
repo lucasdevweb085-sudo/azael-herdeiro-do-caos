@@ -63,6 +63,10 @@ func _build_village() -> void:
     _make_tree(Vector3(-5, 0, -22), 1.0)
     _make_tree(Vector3(22, 0, 11), 1.2)
     _make_tree(Vector3(-22, 0, -12), 1.15)
+    _make_hill(Vector3(-27, 2.7, -29), Vector3(10, 3.2, 8), Color(0.24, 0.36, 0.25))
+    _make_hill(Vector3(-8, 2.2, -34), Vector3(11, 2.7, 7), Color(0.3, 0.42, 0.28))
+    _make_hill(Vector3(17, 2.8, -32), Vector3(13, 3.3, 9), Color(0.22, 0.34, 0.24))
+    _make_hill(Vector3(31, 2.5, -10), Vector3(9, 3.0, 10), Color(0.27, 0.39, 0.26))
 
     _make_well(Vector3(7, 0, 6))
     _make_lantern(Vector3(-3.7, 0, -5))
@@ -520,3 +524,16 @@ func _add_multimesh_detail(detail_name: String, mesh: Mesh, transforms: Array[Tr
 
 func _on_quality_changed(preset_name: String) -> void:
     _refresh_status("Perfil gráfico alterado: %s." % preset_name)
+
+
+func _make_hill(world_position: Vector3, hill_scale: Vector3, color: Color) -> void:
+    var hill := MeshInstance3D.new()
+    var hill_mesh := SphereMesh.new()
+    hill_mesh.radial_segments = 8
+    hill_mesh.rings = 4
+    hill.mesh = hill_mesh
+    hill.position = world_position
+    hill.scale = hill_scale
+    hill.material_override = _material(color)
+    hill.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    add_child(hill)
