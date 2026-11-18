@@ -463,6 +463,7 @@ func _make_ground_details() -> void:
     rng.seed = 20261118
     var grass_transforms: Array[Transform3D] = []
     var rock_transforms: Array[Transform3D] = []
+    var flower_transforms: Array[Transform3D] = []
     var attempts := 0
     while grass_transforms.size() < 110 and attempts < 900:
         attempts += 1
@@ -483,8 +484,19 @@ func _make_ground_details() -> void:
         var rock_scale := Vector3(rng.randf_range(0.18, 0.38), rng.randf_range(0.14, 0.26), rng.randf_range(0.18, 0.38))
         rock_transforms.append(Transform3D(Basis.IDENTITY.scaled(rock_scale), Vector3(x, rock_scale.y, z)))
 
+    attempts = 0
+    while flower_transforms.size() < 48 and attempts < 400:
+        attempts += 1
+        var x := rng.randf_range(-27.0, 27.0)
+        var z := rng.randf_range(-26.0, 26.0)
+        if _is_reserved_detail_area(x, z):
+            continue
+        var flower_scale := Vector3(0.09, 0.06, 0.09)
+        flower_transforms.append(Transform3D(Basis.IDENTITY.scaled(flower_scale), Vector3(x, 0.08, z)))
+
     _add_multimesh_detail("GramaInstanciada", _make_low_poly_sphere(0.32, 0.42), grass_transforms, Color(0.35, 0.53, 0.27))
     _add_multimesh_detail("PedrasInstanciadas", _make_low_poly_sphere(0.42, 0.36), rock_transforms, Color(0.43, 0.43, 0.39))
+    _add_multimesh_detail("FloresAltaQualidade", _make_low_poly_sphere(0.12, 0.12), flower_transforms, Color(0.92, 0.78, 0.42), "high_detail")
 
 func _is_reserved_detail_area(x: float, z: float) -> bool:
     if absf(x) < 3.2 and z > -24.0 and z < 9.0:
@@ -505,7 +517,7 @@ func _make_low_poly_sphere(radius: float, height: float) -> SphereMesh:
     mesh.rings = 3
     return mesh
 
-func _add_multimesh_detail(detail_name: String, mesh: Mesh, transforms: Array[Transform3D], color: Color) -> void:
+func _add_multimesh_detail(detail_name: String, mesh: Mesh, transforms: Array[Transform3D], color: Color, detail_group: String = "optional_detail") -> void:
     var multimesh := MultiMesh.new()
     multimesh.transform_format = MultiMesh.TRANSFORM_3D
     multimesh.mesh = mesh
@@ -518,7 +530,7 @@ func _add_multimesh_detail(detail_name: String, mesh: Mesh, transforms: Array[Tr
     instance.multimesh = multimesh
     instance.material_override = _material(color)
     instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    instance.add_to_group("optional_detail")
+    instance.add_to_group(detail_group)
     add_child(instance)
 
 
