@@ -19,6 +19,7 @@ var current_dialogue: Dictionary = {}
 var dialogue_open: bool = false
 var player_health: int = 100
 var last_choice_result: String = "Ainda não há uma decisão registrada."
+var material_cache: Dictionary = {}
 
 func _ready() -> void:
     player.add_to_group("player")
@@ -26,6 +27,7 @@ func _ready() -> void:
     _create_npc()
     _create_enemy()
     _create_interface()
+    GraphicsSettings.quality_changed.connect(_on_quality_changed)
     GraphicsSettings.apply_recommended()
     _refresh_status("Objetivo: converse com o morador e teste o combate.")
 
@@ -68,7 +70,9 @@ func _build_village() -> void:
     _make_lantern(Vector3(-3.7, 0, -20))
     _make_fence(Vector3(-19, 0, 1), 5)
     _make_fence(Vector3(-19, 0, 4), 5)
-    _make_ground_details()func _create_npc() -> void:
+    _make_ground_details()
+
+func _create_npc() -> void:
     npc = Node3D.new()
     npc.name = "MoradorDaVila"
     npc.position = Vector3(2.3, 0, -1.2)
@@ -109,7 +113,9 @@ func _build_village() -> void:
     marker.billboard = BaseMaterial3D.BILLBOARD_ENABLED
     marker.font_size = 30
     marker.modulate = Color(1.0, 0.91, 0.68)
-    npc.add_child(marker)func _create_enemy() -> void:
+    npc.add_child(marker)
+
+func _create_enemy() -> void:
     var enemy_body := CharacterBody3D.new()
     enemy_body.name = "InimigoDeTreinamento"
     enemy_body.set_script(load("res://scripts/combat/training_enemy.gd"))
@@ -183,7 +189,9 @@ func _create_interface() -> void:
 
     options_container = VBoxContainer.new()
     options_container.add_theme_constant_override("separation", 8)
-    layout.add_child(options_container)func _try_interact() -> void:
+    layout.add_child(options_container)
+
+func _try_interact() -> void:
     if not is_instance_valid(npc):
         return
     var distance := Vector2(
@@ -275,7 +283,9 @@ func _refresh_status(message: String) -> void:
     if information_label == null:
         return
     var quality_name := GraphicsSettings.get_preset_name()
-    information_label.text = "Vida: %d/100 | Qualidade: %s\n%s" % [player_health, quality_name, message]func _make_box(box_name: String, world_position: Vector3, box_size: Vector3, color: Color) -> void:
+    information_label.text = "Vida: %d/100 | Qualidade: %s\n%s" % [player_health, quality_name, message]
+
+func _make_box(box_name: String, world_position: Vector3, box_size: Vector3, color: Color) -> void:
     var body := StaticBody3D.new()
     body.name = box_name
     body.position = world_position
@@ -306,7 +316,9 @@ func _make_visual_box(node_name: String, parent: Node3D, world_position: Vector3
     mesh_instance.rotation_degrees = rotation_value
     mesh_instance.material_override = _material(color)
     parent.add_child(mesh_instance)
-    return mesh_instancefunc _make_tree(world_position: Vector3, size_multiplier: float = 1.0) -> void:
+    return mesh_instance
+
+func _make_tree(world_position: Vector3, size_multiplier: float = 1.0) -> void:
     var trunk := MeshInstance3D.new()
     var trunk_mesh := CylinderMesh.new()
     trunk_mesh.top_radius = 0.16 * size_multiplier
@@ -329,7 +341,9 @@ func _make_visual_box(node_name: String, parent: Node3D, world_position: Vector3
         canopy.mesh = cone
         canopy.position = world_position + Vector3(0, (2.0 + layer * 0.72) * size_multiplier, 0)
         canopy.material_override = _material(canopy_colors[layer])
-        add_child(canopy)func _material(color: Color, roughness: float = 0.9) -> StandardMaterial3D:
+        add_child(canopy)
+
+func _material(color: Color, roughness: float = 0.9) -> StandardMaterial3D:
     var key := color.to_html(true) + "_" + str(roughness)
     if material_cache.has(key):
         return material_cache[key] as StandardMaterial3D
@@ -502,3 +516,7 @@ func _add_multimesh_detail(detail_name: String, mesh: Mesh, transforms: Array[Tr
     instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     instance.add_to_group("optional_detail")
     add_child(instance)
+
+
+func _on_quality_changed(preset_name: String) -> void:
+    _refresh_status("Perfil gráfico alterado: %s." % preset_name)
