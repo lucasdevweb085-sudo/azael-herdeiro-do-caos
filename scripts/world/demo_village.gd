@@ -29,7 +29,7 @@ func _ready() -> void:
     _refresh_status("Objetivo: converse com o morador e teste o combate.")
 
 func _unhandled_input(event: InputEvent) -> void:
-    if not event is InputEventKey:
+    if not (event is InputEventKey):
         return
     if not event.pressed or event.echo or dialogue_open:
         return
@@ -188,7 +188,7 @@ func _open_dialogue() -> void:
         _refresh_status("Não foi possível abrir o arquivo de diálogo.")
         return
     var parsed: Variant = JSON.parse_string(file.get_as_text())
-    if not parsed is Dictionary:
+    if not (parsed is Dictionary):
         _refresh_status("O arquivo de diálogo contém dados inválidos.")
         return
 
