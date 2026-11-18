@@ -3,6 +3,8 @@ extends Node
 
 enum Preset { PERFORMANCE, BALANCED, HIGH }
 
+signal quality_changed(preset_name: String)
+
 var current_preset: int = Preset.BALANCED
 var is_mobile: bool = false
 
@@ -34,6 +36,8 @@ func apply_preset(preset: int) -> void:
     for detail in get_tree().get_nodes_in_group("optional_detail"):
         if detail is VisualInstance3D:
             detail.visible = show_optional_detail
+
+    quality_changed.emit(get_preset_name())
 
 func cycle_preset() -> void:
     var next_preset := (current_preset + 1) % 3
