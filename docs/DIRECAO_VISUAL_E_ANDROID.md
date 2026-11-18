@@ -18,8 +18,8 @@ O autoload `GraphicsSettings` oferece três perfis:
 | Perfil | Limite de quadros | Sombras | Detalhes de grama e pedras |
 |---|---:|---|---|
 | Desempenho | 45 FPS | Desligadas | Ocultos |
-| Equilibrado | 60 FPS | Ligadas | Visíveis |
-| Alto | 60 FPS | Ligadas | Visíveis |
+| Equilibrado | 60 FPS | Ligadas | Grama e pedras |
+| Alto | 60 FPS | Ligadas | Grama, pedras e flores extras |
 
 No Android com o renderizador Mobile, o perfil inicial é **Equilibrado**. Se o aparelho precisar do fallback Compatibility, o perfil inicial passa para **Desempenho**. No computador, o perfil inicial é **Alto**. Durante o protótipo para PC, pressione **F7** para alternar entre os três perfis.
 
