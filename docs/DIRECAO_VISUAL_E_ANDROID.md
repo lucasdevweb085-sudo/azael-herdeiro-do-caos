@@ -27,7 +27,7 @@ O perfil é apenas um ponto de partida. O limite de FPS não garante que o apare
 
 ## Decisões de compatibilidade
 
-O projeto continua usando o renderizador Godot **Compatibility (OpenGL)** para alcançar uma faixa maior de celulares Android, inclusive aparelhos sem Vulkan. Isso limita alguns efeitos avançados, mas combina com a direção artística estilizada.
+No Android, o projeto usa primeiro o renderizador **Mobile (Vulkan)** para aproveitar melhor os aparelhos compatíveis. Em Godot 4.4 ou posterior, o projeto mantém ativado o fallback para **Compatibility (OpenGL)** caso o RenderingDevice/Vulkan não esteja disponível. No computador, o padrão continua Compatibility para facilitar o desenvolvimento em hardware modesto.
 
 Não usar como padrão:
 - Iluminação global dinâmica pesada.
@@ -43,4 +43,4 @@ Não usar como padrão:
 3. Criar uma tela gráfica acessível por toque para selecionar os perfis no celular.
 4. Substituir gradualmente os modelos provisórios por modelos finais otimizados, com LODs e texturas compactadas.
 
-Nenhuma meta de FPS ou compatibilidade é considerada aprovada até haver testes em dispositivos reais.
+A escolha Mobile com fallback para Compatibility amplia o alcance, mas não substitui testes em dispositivos reais. Nenhuma meta de FPS ou compatibilidade é considerada aprovada até haver esses testes.
