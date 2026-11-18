@@ -10,6 +10,7 @@ config/description="RPG 3D de fantasia em terceira pessoa."
 
 [autoload]
 GameState="*res://scripts/core/game_state.gd"
+GraphicsSettings="*res://scripts/core/graphics_settings.gd"
 
 [display]
 window/size/viewport_width=1280
