@@ -26,6 +26,7 @@ func _ready() -> void:
     _create_npc()
     _create_enemy()
     _create_interface()
+    GraphicsSettings.apply_recommended()
     _refresh_status("Objetivo: converse com o morador e teste o combate.")
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -42,55 +43,73 @@ func _unhandled_input(event: InputEvent) -> void:
         get_viewport().set_input_as_handled()
 
 func _build_village() -> void:
-    _make_visual_box("Estrada", self, Vector3(0, 0.015, -7), Vector3(5, 0.03, 30), Color(0.42, 0.34, 0.25))
-    _make_box("CasaEsquerda", Vector3(-12, 0, -12), Vector3(6, 4, 5), Color(0.55, 0.34, 0.24))
-    _make_visual_box("TelhadoEsquerdo", self, Vector3(-12, 4.1, -12), Vector3(6.8, 0.7, 5.8), Color(0.28, 0.16, 0.13))
-    _make_box("CasaDireita", Vector3(12, 0, -15), Vector3(6, 4, 5), Color(0.67, 0.55, 0.36))
-    _make_visual_box("TelhadoDireito", self, Vector3(12, 4.1, -15), Vector3(6.8, 0.7, 5.8), Color(0.34, 0.22, 0.16))
-    _make_box("Deposito", Vector3(14, 0, 5), Vector3(5, 3.2, 5), Color(0.42, 0.43, 0.37))
-    _make_visual_box("TelhadoDeposito", self, Vector3(14, 3.3, 5), Vector3(5.8, 0.6, 5.8), Color(0.25, 0.28, 0.25))
+    var ground: MeshInstance3D = get_node("Ground/MeshInstance3D")
+    ground.material_override = _material(Color(0.25, 0.39, 0.23), 1.0)
 
-    _make_tree(Vector3(-8, 0, -3))
-    _make_tree(Vector3(8, 0, -5))
-    _make_tree(Vector3(-17, 0, 6))
-    _make_tree(Vector3(18, 0, -4))
-    _make_tree(Vector3(5, 0, -18))
-    _make_tree(Vector3(-5, 0, -20))
+    _make_visual_box("Estrada", self, Vector3(0, 0.025, -7), Vector3(5.4, 0.05, 30), Color(0.48, 0.36, 0.24))
+    _make_visual_box("TrilhaLateral", self, Vector3(8.5, 0.018, 1), Vector3(2.2, 0.035, 15), Color(0.43, 0.34, 0.24))
 
-    var well := MeshInstance3D.new()
-    well.name = "PocoDaVila"
-    var well_mesh := CylinderMesh.new()
-    well_mesh.top_radius = 1.0
-    well_mesh.bottom_radius = 1.0
-    well_mesh.height = 0.8
-    well.mesh = well_mesh
-    well.position = Vector3(7, 0.4, 6)
-    well.material_override = _material(Color(0.38, 0.4, 0.42))
-    add_child(well)
+    _make_house("CasaDoArtesao", Vector3(-12, 0, -12), Vector3(6, 4, 5), Color(0.69, 0.43, 0.29), Color(0.35, 0.18, 0.15))
+    _make_house("CasaDaEstalagem", Vector3(12, 0, -15), Vector3(6, 4, 5), Color(0.77, 0.65, 0.43), Color(0.34, 0.22, 0.16))
+    _make_house("Deposito", Vector3(14, 0, 5), Vector3(5, 3.2, 5), Color(0.48, 0.49, 0.39), Color(0.25, 0.28, 0.23), false)
 
-func _create_npc() -> void:
+    _make_tree(Vector3(-8, 0, -3), 1.0)
+    _make_tree(Vector3(8, 0, -5), 0.9)
+    _make_tree(Vector3(-17, 0, 6), 1.15)
+    _make_tree(Vector3(18, 0, -4), 1.1)
+    _make_tree(Vector3(5, 0, -22), 0.95)
+    _make_tree(Vector3(-5, 0, -22), 1.0)
+    _make_tree(Vector3(22, 0, 11), 1.2)
+    _make_tree(Vector3(-22, 0, -12), 1.15)
+
+    _make_well(Vector3(7, 0, 6))
+    _make_lantern(Vector3(-3.7, 0, -5))
+    _make_lantern(Vector3(3.7, 0, -13))
+    _make_lantern(Vector3(-3.7, 0, -20))
+    _make_fence(Vector3(-19, 0, 1), 5)
+    _make_fence(Vector3(-19, 0, 4), 5)
+    _make_ground_details()func _create_npc() -> void:
     npc = Node3D.new()
     npc.name = "MoradorDaVila"
     npc.position = Vector3(2.3, 0, -1.2)
     add_child(npc)
 
-    var body_mesh := MeshInstance3D.new()
-    var capsule := CapsuleMesh.new()
-    capsule.radius = 0.35
-    capsule.height = 1.7
-    body_mesh.mesh = capsule
-    body_mesh.position.y = 0.85
-    body_mesh.material_override = _material(Color(0.18, 0.43, 0.72))
-    npc.add_child(body_mesh)
+    var body := MeshInstance3D.new()
+    var body_mesh := CapsuleMesh.new()
+    body_mesh.radius = 0.34
+    body_mesh.height = 1.25
+    body.mesh = body_mesh
+    body.position.y = 0.82
+    body.material_override = _material(Color(0.18, 0.39, 0.64))
+    npc.add_child(body)
+
+    var head := MeshInstance3D.new()
+    var head_mesh := SphereMesh.new()
+    head_mesh.radius = 0.25
+    head_mesh.height = 0.5
+    head_mesh.radial_segments = 10
+    head_mesh.rings = 6
+    head.mesh = head_mesh
+    head.position = Vector3(0, 1.58, 0)
+    head.material_override = _material(Color(0.83, 0.62, 0.46))
+    npc.add_child(head)
+
+    var hair := MeshInstance3D.new()
+    var hair_mesh := SphereMesh.new()
+    hair_mesh.radius = 0.26
+    hair_mesh.height = 0.3
+    hair.mesh = hair_mesh
+    hair.position = Vector3(0, 1.76, -0.015)
+    hair.material_override = _material(Color(0.22, 0.14, 0.1))
+    npc.add_child(hair)
 
     var marker := Label3D.new()
     marker.text = "MORADOR"
-    marker.position = Vector3(0, 2.0, 0)
+    marker.position = Vector3(0, 2.15, 0)
     marker.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-    marker.font_size = 32
-    npc.add_child(marker)
-
-func _create_enemy() -> void:
+    marker.font_size = 30
+    marker.modulate = Color(1.0, 0.91, 0.68)
+    npc.add_child(marker)func _create_enemy() -> void:
     var enemy_body := CharacterBody3D.new()
     enemy_body.name = "InimigoDeTreinamento"
     enemy_body.set_script(load("res://scripts/combat/training_enemy.gd"))
@@ -126,12 +145,12 @@ func _create_enemy() -> void:
     enemy_body.connect("defeated", Callable(self, "_on_enemy_defeated"))
 
 func _create_interface() -> void:
-    status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: atacar | ESC: soltar mouse"
+    status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: atacar | F7: qualidade"
     status_label.add_theme_font_size_override("font_size", 16)
 
     information_label = Label.new()
     information_label.position = Vector2(18, 105)
-    information_label.size = Vector2(620, 70)
+    information_label.size = Vector2(640, 70)
     information_label.add_theme_font_size_override("font_size", 16)
     information_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
     ui_layer.add_child(information_label)
@@ -164,9 +183,7 @@ func _create_interface() -> void:
 
     options_container = VBoxContainer.new()
     options_container.add_theme_constant_override("separation", 8)
-    layout.add_child(options_container)
-
-func _try_interact() -> void:
+    layout.add_child(options_container)func _try_interact() -> void:
     if not is_instance_valid(npc):
         return
     var distance := Vector2(
@@ -257,9 +274,8 @@ func _on_enemy_defeated() -> void:
 func _refresh_status(message: String) -> void:
     if information_label == null:
         return
-    information_label.text = "Vida: %d/100\n%s" % [player_health, message]
-
-func _make_box(box_name: String, world_position: Vector3, box_size: Vector3, color: Color) -> void:
+    var quality_name := GraphicsSettings.get_preset_name()
+    information_label.text = "Vida: %d/100 | Qualidade: %s\n%s" % [player_health, quality_name, message]func _make_box(box_name: String, world_position: Vector3, box_size: Vector3, color: Color) -> void:
     var body := StaticBody3D.new()
     body.name = box_name
     body.position = world_position
@@ -280,37 +296,209 @@ func _make_box(box_name: String, world_position: Vector3, box_size: Vector3, col
     collision.position.y = box_size.y * 0.5
     body.add_child(collision)
 
-func _make_visual_box(node_name: String, parent: Node3D, world_position: Vector3, box_size: Vector3, color: Color) -> void:
+func _make_visual_box(node_name: String, parent: Node3D, world_position: Vector3, box_size: Vector3, color: Color, rotation_value: Vector3 = Vector3.ZERO) -> MeshInstance3D:
     var mesh_instance := MeshInstance3D.new()
     mesh_instance.name = node_name
     var box_mesh := BoxMesh.new()
     box_mesh.size = box_size
     mesh_instance.mesh = box_mesh
     mesh_instance.position = world_position
+    mesh_instance.rotation_degrees = rotation_value
     mesh_instance.material_override = _material(color)
     parent.add_child(mesh_instance)
-
-func _make_tree(world_position: Vector3) -> void:
+    return mesh_instancefunc _make_tree(world_position: Vector3, size_multiplier: float = 1.0) -> void:
     var trunk := MeshInstance3D.new()
     var trunk_mesh := CylinderMesh.new()
-    trunk_mesh.top_radius = 0.18
-    trunk_mesh.bottom_radius = 0.28
-    trunk_mesh.height = 2.2
+    trunk_mesh.top_radius = 0.16 * size_multiplier
+    trunk_mesh.bottom_radius = 0.26 * size_multiplier
+    trunk_mesh.height = 2.0 * size_multiplier
+    trunk_mesh.radial_segments = 7
     trunk.mesh = trunk_mesh
-    trunk.position = world_position + Vector3(0, 1.1, 0)
-    trunk.material_override = _material(Color(0.3, 0.19, 0.12))
+    trunk.position = world_position + Vector3(0, size_multiplier, 0)
+    trunk.material_override = _material(Color(0.31, 0.19, 0.12))
     add_child(trunk)
 
-    var crown := MeshInstance3D.new()
-    var crown_mesh := SphereMesh.new()
-    crown_mesh.radius = 1.0
-    crown_mesh.height = 2.0
-    crown.mesh = crown_mesh
-    crown.position = world_position + Vector3(0, 2.6, 0)
-    crown.material_override = _material(Color(0.18, 0.39, 0.22))
-    add_child(crown)
+    var canopy_colors := [Color(0.13, 0.34, 0.19), Color(0.17, 0.42, 0.22), Color(0.22, 0.47, 0.26)]
+    for layer in range(3):
+        var canopy := MeshInstance3D.new()
+        var cone := CylinderMesh.new()
+        cone.top_radius = 0.0
+        cone.bottom_radius = (1.15 - layer * 0.22) * size_multiplier
+        cone.height = 1.7 * size_multiplier
+        cone.radial_segments = 7
+        canopy.mesh = cone
+        canopy.position = world_position + Vector3(0, (2.0 + layer * 0.72) * size_multiplier, 0)
+        canopy.material_override = _material(canopy_colors[layer])
+        add_child(canopy)func _material(color: Color, roughness: float = 0.9) -> StandardMaterial3D:
+    var key := color.to_html(true) + "_" + str(roughness)
+    if material_cache.has(key):
+        return material_cache[key] as StandardMaterial3D
 
-func _material(color: Color) -> StandardMaterial3D:
     var material := StandardMaterial3D.new()
     material.albedo_color = color
+    material.roughness = roughness
+    material_cache[key] = material
     return material
+
+func _make_house(house_name: String, house_position: Vector3, size: Vector3, wall_color: Color, roof_color: Color, add_windows: bool = true) -> void:
+    _make_box(house_name, house_position, size, wall_color)
+    var front_z := house_position.z + size.z * 0.5 + 0.08
+    var roof_y := size.y + 0.5
+    _make_visual_box(house_name + "TelhadoFrente", self, Vector3(house_position.x, roof_y, house_position.z + 1.25), Vector3(size.x + 0.8, 0.34, 3.25), roof_color, Vector3(35, 0, 0))
+    _make_visual_box(house_name + "TelhadoFundo", self, Vector3(house_position.x, roof_y, house_position.z - 1.25), Vector3(size.x + 0.8, 0.34, 3.25), roof_color, Vector3(-35, 0, 0))
+    _make_visual_box(house_name + "Porta", self, Vector3(house_position.x, 1.15, front_z), Vector3(1.15, 2.3, 0.12), Color(0.25, 0.14, 0.09))
+    _make_visual_box(house_name + "MolduraPorta", self, Vector3(house_position.x, 2.35, front_z - 0.015), Vector3(1.45, 0.14, 0.18), Color(0.78, 0.62, 0.38))
+    if add_windows:
+        for side in [-1.0, 1.0]:
+            var window_x := house_position.x + side * 1.85
+            _make_visual_box(house_name + "MolduraJanela", self, Vector3(window_x, 2.25, front_z - 0.02), Vector3(1.25, 1.15, 0.18), Color(0.3, 0.19, 0.12))
+            _make_visual_box(house_name + "VidroJanela", self, Vector3(window_x, 2.25, front_z - 0.13), Vector3(0.98, 0.88, 0.04), Color(0.38, 0.63, 0.73))
+    _make_visual_box(house_name + "Base", self, Vector3(house_position.x, 0.18, house_position.z + size.z * 0.5 + 0.12), Vector3(size.x + 0.15, 0.22, 0.18), Color(0.48, 0.39, 0.29))
+
+func _make_well(world_position: Vector3) -> void:
+    var base := MeshInstance3D.new()
+    var base_mesh := CylinderMesh.new()
+    base_mesh.top_radius = 0.86
+    base_mesh.bottom_radius = 1.0
+    base_mesh.height = 0.75
+    base_mesh.radial_segments = 10
+    base.mesh = base_mesh
+    base.position = world_position + Vector3(0, 0.38, 0)
+    base.material_override = _material(Color(0.42, 0.43, 0.4))
+    add_child(base)
+
+    var rim := MeshInstance3D.new()
+    var rim_mesh := CylinderMesh.new()
+    rim_mesh.top_radius = 0.98
+    rim_mesh.bottom_radius = 0.98
+    rim_mesh.height = 0.16
+    rim_mesh.radial_segments = 10
+    rim.mesh = rim_mesh
+    rim.position = world_position + Vector3(0, 0.82, 0)
+    rim.material_override = _material(Color(0.58, 0.56, 0.48))
+    add_child(rim)
+
+    var water := MeshInstance3D.new()
+    var water_mesh := CylinderMesh.new()
+    water_mesh.top_radius = 0.72
+    water_mesh.bottom_radius = 0.72
+    water_mesh.height = 0.025
+    water_mesh.radial_segments = 10
+    water.mesh = water_mesh
+    water.position = world_position + Vector3(0, 0.88, 0)
+    water.material_override = _material(Color(0.14, 0.36, 0.48), 0.25)
+    add_child(water)
+
+func _make_lantern(world_position: Vector3) -> void:
+    var post := MeshInstance3D.new()
+    var post_mesh := CylinderMesh.new()
+    post_mesh.top_radius = 0.07
+    post_mesh.bottom_radius = 0.11
+    post_mesh.height = 2.25
+    post_mesh.radial_segments = 6
+    post.mesh = post_mesh
+    post.position = world_position + Vector3(0, 1.12, 0)
+    post.material_override = _material(Color(0.25, 0.17, 0.12))
+    add_child(post)
+
+    var cap := MeshInstance3D.new()
+    var cap_mesh := BoxMesh.new()
+    cap_mesh.size = Vector3(0.55, 0.12, 0.55)
+    cap.mesh = cap_mesh
+    cap.position = world_position + Vector3(0, 2.25, 0)
+    cap.material_override = _material(Color(0.2, 0.14, 0.1))
+    add_child(cap)
+
+    var bulb := MeshInstance3D.new()
+    var bulb_mesh := SphereMesh.new()
+    bulb_mesh.radius = 0.16
+    bulb_mesh.height = 0.32
+    bulb.mesh = bulb_mesh
+    bulb.position = world_position + Vector3(0, 1.9, 0)
+    var glow := _material(Color(1.0, 0.72, 0.32), 0.35)
+    glow.emission_enabled = true
+    glow.emission = Color(1.0, 0.46, 0.12)
+    glow.emission_energy_multiplier = 1.15
+    bulb.material_override = glow
+    add_child(bulb)
+
+func _make_fence(world_position: Vector3, length: int) -> void:
+    for index in range(length):
+        var post := MeshInstance3D.new()
+        var post_mesh := BoxMesh.new()
+        post_mesh.size = Vector3(0.16, 0.9, 0.16)
+        post.mesh = post_mesh
+        post.position = world_position + Vector3(index * 1.0, 0.45, 0)
+        post.material_override = _material(Color(0.34, 0.22, 0.14))
+        add_child(post)
+
+    var rail := MeshInstance3D.new()
+    var rail_mesh := BoxMesh.new()
+    rail_mesh.size = Vector3(float(length - 1), 0.14, 0.12)
+    rail.mesh = rail_mesh
+    rail.position = world_position + Vector3((length - 1) * 0.5, 0.65, 0)
+    rail.material_override = _material(Color(0.42, 0.29, 0.18))
+    add_child(rail)
+
+func _make_ground_details() -> void:
+    var rng := RandomNumberGenerator.new()
+    rng.seed = 20261118
+    var grass_transforms: Array[Transform3D] = []
+    var rock_transforms: Array[Transform3D] = []
+    var attempts := 0
+    while grass_transforms.size() < 110 and attempts < 900:
+        attempts += 1
+        var x := rng.randf_range(-28.0, 28.0)
+        var z := rng.randf_range(-27.0, 27.0)
+        if _is_reserved_detail_area(x, z):
+            continue
+        var scale := Vector3(rng.randf_range(0.7, 1.4), rng.randf_range(0.45, 0.85), rng.randf_range(0.7, 1.4))
+        grass_transforms.append(Transform3D(Basis.IDENTITY.scaled(scale), Vector3(x, 0.12, z)))
+
+    attempts = 0
+    while rock_transforms.size() < 32 and attempts < 500:
+        attempts += 1
+        var x := rng.randf_range(-27.0, 27.0)
+        var z := rng.randf_range(-26.0, 26.0)
+        if _is_reserved_detail_area(x, z):
+            continue
+        var scale := Vector3(rng.randf_range(0.18, 0.38), rng.randf_range(0.14, 0.26), rng.randf_range(0.18, 0.38))
+        rock_transforms.append(Transform3D(Basis.IDENTITY.scaled(scale), Vector3(x, scale.y, z)))
+
+    _add_multimesh_detail("GramaInstanciada", _make_low_poly_sphere(0.32, 0.42), grass_transforms, Color(0.35, 0.53, 0.27))
+    _add_multimesh_detail("PedrasInstanciadas", _make_low_poly_sphere(0.42, 0.36), rock_transforms, Color(0.43, 0.43, 0.39))
+
+func _is_reserved_detail_area(x: float, z: float) -> bool:
+    if absf(x) < 3.2 and z > -24.0 and z < 9.0:
+        return true
+    if x > -16.0 and x < -8.0 and z > -16.0 and z < -8.0:
+        return true
+    if x > 8.0 and x < 16.0 and z > -19.0 and z < -11.0:
+        return true
+    if x > 10.0 and x < 18.0 and z > 2.0 and z < 8.0:
+        return true
+    return false
+
+func _make_low_poly_sphere(radius: float, height: float) -> SphereMesh:
+    var mesh := SphereMesh.new()
+    mesh.radius = radius
+    mesh.height = height
+    mesh.radial_segments = 6
+    mesh.rings = 3
+    return mesh
+
+func _add_multimesh_detail(detail_name: String, mesh: Mesh, transforms: Array[Transform3D], color: Color) -> void:
+    var multimesh := MultiMesh.new()
+    multimesh.transform_format = MultiMesh.TRANSFORM_3D
+    multimesh.mesh = mesh
+    multimesh.instance_count = transforms.size()
+    for index in range(transforms.size()):
+        multimesh.set_instance_transform(index, transforms[index])
+
+    var instance := MultiMeshInstance3D.new()
+    instance.name = detail_name
+    instance.multimesh = multimesh
+    instance.material_override = _material(color)
+    instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    instance.add_to_group("optional_detail")
+    add_child(instance)
