@@ -1,6 +1,6 @@
 # AZAEL — HERDEIRO DO CAOS
 
-Projeto independente de RPG 3D em terceira pessoa, desenvolvido em Godot 4.x.
+Projeto independente de RPG 3D em terceira pessoa, desenvolvido em Godot 4.7 ou posterior (recomendado).
 
 ## Direção do projeto
 
