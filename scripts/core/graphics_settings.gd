@@ -41,6 +41,11 @@ func apply_preset(preset: int) -> void:
         if detail is VisualInstance3D:
             detail.visible = show_optional_detail
 
+    var show_high_detail := current_preset == Preset.HIGH
+    for detail in get_tree().get_nodes_in_group("high_detail"):
+        if detail is VisualInstance3D:
+            detail.visible = show_high_detail
+
     quality_changed.emit(get_preset_name())
 
 func cycle_preset() -> void:
