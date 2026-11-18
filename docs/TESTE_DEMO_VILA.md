@@ -18,6 +18,7 @@ Esta etapa adiciona uma vila provisória para validar os sistemas básicos. Os m
 - **F perto do alvo vermelho:** atacar. Cada golpe causa 10 de dano; o inimigo tem 40 pontos de vida.
 - O inimigo se aproxima e causa dano quando chega perto.
 - **ESC:** liberar ou capturar o mouse novamente.
+- **F7 (teclado no PC):** alternar entre Desempenho, Equilibrado e Alto. No Android, o perfil inicial é escolhido automaticamente conforme o renderizador disponível.
 
 ## O que ainda não está pronto
 
