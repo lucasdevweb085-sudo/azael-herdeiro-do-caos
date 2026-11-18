@@ -21,7 +21,7 @@ O autoload `GraphicsSettings` oferece três perfis:
 | Equilibrado | 60 FPS | Ligadas | Visíveis |
 | Alto | 60 FPS | Ligadas | Visíveis |
 
-No Android, o perfil inicial é **Equilibrado**. No computador, o perfil inicial é **Alto**. Durante o protótipo para PC, pressione **F7** para alternar entre os três perfis.
+No Android com o renderizador Mobile, o perfil inicial é **Equilibrado**. Se o aparelho precisar do fallback Compatibility, o perfil inicial passa para **Desempenho**. No computador, o perfil inicial é **Alto**. Durante o protótipo para PC, pressione **F7** para alternar entre os três perfis.
 
 O perfil é apenas um ponto de partida. O limite de FPS não garante que o aparelho consiga atingir essa taxa; isso depende do processador, GPU, resolução, temperatura e complexidade da cena.
 
