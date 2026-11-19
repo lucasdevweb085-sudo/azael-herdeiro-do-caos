@@ -26,8 +26,15 @@ func _initialize() -> void:
 
     var controls := MobileControlsScript.new()
     root.add_child(controls)
-    controls.call("_set_held_action", "block", true)
-    if not _check(Input.is_action_pressed("block"), "Botão de defesa deve ativar a ação enquanto pressionado"):
+    var action_row := controls.get_node_or_null("ActionButtons") as HBoxContainer
+    if not _check(action_row != null and action_row.get_child_count() == 4, "Os quatro botões de ação precisam ser criados"):
+        controls.queue_free()
+        quit(1)
+        return
+
+    var defend_button := action_row.get_child(3) as Button
+    defend_button.button_down.emit()
+    if not _check(Input.is_action_pressed("block"), "Botão DEFENDER deve ativar a ação ao ser pressionado"):
         controls.queue_free()
         quit(1)
         return
@@ -38,6 +45,13 @@ func _initialize() -> void:
         quit(1)
         return
 
+    defend_button.button_up.emit()
+    if not _check(not Input.is_action_pressed("block"), "Soltar DEFENDER deve liberar a ação de defesa"):
+        controls.queue_free()
+        quit(1)
+        return
+
+    defend_button.button_down.emit()
     controls.set_controls_enabled(false)
     if not _check(not Input.is_action_pressed("block"), "Desativar controles deve liberar a defesa"):
         controls.queue_free()
