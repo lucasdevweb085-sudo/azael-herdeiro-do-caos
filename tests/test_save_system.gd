@@ -67,14 +67,19 @@ func _assert_key_action(action_name: StringName, expected_key: int) -> bool:
 
 
 func _test_save_load_round_trip() -> bool:
-    var game_state = GameStateScript.new()
-    game_state.name = "GameState"
-    root.add_child(game_state)
+    var game_state = root.get_node_or_null("GameState")
+    var save_system = root.get_node_or_null("SaveSystem")
+    if not _check(game_state != null, "Autoload GameState não foi encontrado"):
+        return false
+    if not _check(save_system != null, "Autoload SaveSystem não foi encontrado"):
+        return false
 
-    var save_system = SaveSystemScript.new()
-    save_system.name = "SaveSystem"
-    root.add_child(save_system)
-    await process_frame
+    var story_flags: Dictionary = game_state.get("story_flags")
+    var relationships: Dictionary = game_state.get("relationships")
+    var decisions: Array = game_state.get("decisions")
+    story_flags.clear()
+    relationships.clear()
+    decisions.clear()
 
     game_state.call("set_flag", "save_round_trip_flag", true)
     game_state.call("change_relationship", "village", 3)
@@ -85,7 +90,6 @@ func _test_save_load_round_trip() -> bool:
 
     game_state.call("set_flag", "save_round_trip_flag", false)
     game_state.call("change_relationship", "village", -3)
-    var decisions: Array = game_state.get("decisions")
     decisions.clear()
 
     var loaded_extra: Dictionary = save_system.call("load_game")
@@ -105,10 +109,10 @@ func _test_save_load_round_trip() -> bool:
     var save_path := ProjectSettings.globalize_path("user://azael_save.json")
     if FileAccess.file_exists("user://azael_save.json"):
         DirAccess.remove_absolute(save_path)
-    game_state.queue_free()
-    save_system.queue_free()
+    story_flags.clear()
+    relationships.clear()
+    decisions.clear()
     return true
-
 
 func _check(condition: bool, message: String) -> bool:
     if not condition:
