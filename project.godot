@@ -51,11 +51,11 @@ attack={
 
 save_game={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"physical_keycode":4194335)]
+"events": [Object(InputEventKey,"physical_keycode":4194336)]
 }
 load_game={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"physical_keycode":4194339)]
+"events": [Object(InputEventKey,"physical_keycode":4194340)]
 }
 
 dodge={
