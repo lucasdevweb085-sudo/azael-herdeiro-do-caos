@@ -1,7 +1,7 @@
 extends SceneTree
 
 const SaveSystemScript := preload("res://scripts/core/save_system.gd")
-const GameStateScript := preload("res://scripts/core/game_state.gd")
+const MainScene := preload("res://scenes/main/main.tscn")
 
 
 func _initialize() -> void:
@@ -73,9 +73,34 @@ func _run_save_load_round_trip() -> void:
     if not await _test_save_load_round_trip():
         quit(1)
         return
+    if not await _test_scene_state_round_trip():
+        quit(1)
+        return
 
-    print("OK: save payload, keyboard shortcuts and save/load round trip")
+    print("OK: save payload, keyboard shortcuts and scene state round trip")
     quit()
+
+
+func _test_scene_state_round_trip() -> bool:
+    var demo_scene := MainScene.instantiate()
+    root.add_child(demo_scene)
+    await process_frame
+
+    demo_scene.set("last_choice_result", "Resultado da escolha restaurado.")
+    var scene_state: Dictionary = demo_scene.call("_capture_scene_state")
+    if not _check(scene_state.has("last_choice_result"), "Resultado da escolha não foi incluído no salvamento da cena"):
+        demo_scene.queue_free()
+        return false
+
+    demo_scene.set("last_choice_result", "Texto temporário.")
+    demo_scene.call("_restore_scene_state", scene_state)
+    if not _check(str(demo_scene.get("last_choice_result")) == "Resultado da escolha restaurado.", "Resultado da escolha não foi restaurado"):
+        demo_scene.queue_free()
+        return false
+
+    demo_scene.queue_free()
+    await process_frame
+    return true
 
 
 func _assert_key_action(action_name: StringName, expected_key: int) -> bool:
