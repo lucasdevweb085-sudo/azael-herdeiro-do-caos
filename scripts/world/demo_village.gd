@@ -461,7 +461,7 @@ func _make_house(house_name: String, house_position: Vector3, size: Vector3, wal
     _make_visual_box(house_name + "MolduraPorta", self, Vector3(house_position.x, 2.35, front_z - 0.015), Vector3(1.45, 0.14, 0.18), Color(0.78, 0.62, 0.38))
     if add_windows:
         for side in [-1.0, 1.0]:
-            var window_x := house_position.x + side * 1.85
+            var window_x: float = house_position.x + float(side) * 1.85
             _make_visual_box(house_name + "MolduraJanela", self, Vector3(window_x, 2.25, front_z - 0.02), Vector3(1.25, 1.15, 0.18), Color(0.3, 0.19, 0.12))
             _make_visual_box(house_name + "VidroJanela", self, Vector3(window_x, 2.25, front_z - 0.13), Vector3(0.98, 0.88, 0.04), Color(0.38, 0.63, 0.73))
     _make_visual_box(house_name + "Base", self, Vector3(house_position.x, 0.18, house_position.z + size.z * 0.5 + 0.12), Vector3(size.x + 0.15, 0.22, 0.18), Color(0.48, 0.39, 0.29))

@@ -29,21 +29,49 @@ jobs:
           mkdir -p "$RUNNER_TEMP/godot"
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
           chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
-          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
           mv "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
 
       - name: Import project and check the main scene
         shell: bash
         run: |
           set -euo pipefail
+          run_godot_checked() {
+            local output status=0
+            if output="$("$@" 2>&1)"; then
+              status=0
+            else
+              status=$?
+            fi
+            printf '%s\n' "$output"
+            if grep -E "SCRIPT ERROR:|ERROR:|Parse Error:|Failed to load script" <<< "$output"; then
+              return 1
+            fi
+            return "$status"
+          }
+
           godot --version
-          godot --headless --editor --path . --quit
-          timeout 60s godot --headless --path . --quit-after 10
+          run_godot_checked godot --headless --editor --path . --quit
+          run_godot_checked timeout 60s godot --headless --path . --quit-after 10
 
       - name: Run GDScript tests
         shell: bash
         run: |
           set -euo pipefail
-          timeout 60s godot --headless --path . --script tests/test_mobile_controls.gd
-          timeout 60s godot --headless --path . --script tests/test_save_system.gd
-          timeout 60s godot --headless --path . --script tests/test_combat_rules.gd
+          run_godot_checked() {
+            local output status=0
+            if output="$("$@" 2>&1)"; then
+              status=0
+            else
+              status=$?
+            fi
+            printf '%s\n' "$output"
+            if grep -E "SCRIPT ERROR:|ERROR:|Parse Error:|Failed to load script" <<< "$output"; then
+              return 1
+            fi
+            return "$status"
+          }
+
+          run_godot_checked timeout 60s godot --headless --path . --script tests/test_mobile_controls.gd
+          run_godot_checked timeout 60s godot --headless --path . --script tests/test_save_system.gd
+          run_godot_checked timeout 60s godot --headless --path . --script tests/test_combat_rules.gd

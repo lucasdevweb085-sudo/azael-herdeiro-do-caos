@@ -6,7 +6,7 @@ signal action_triggered(action_name: String)
 const MOVEMENT_ACTIONS := ["move_left", "move_right", "move_forward", "move_back"]
 const JOYSTICK_MAX_DISTANCE := 54.0
 
-class VirtualJoystick extends Control:
+class AzaelVirtualJoystick extends Control:
     var knob_offset: Vector2 = Vector2.ZERO
 
     func _ready() -> void:
@@ -31,7 +31,7 @@ class VirtualJoystick extends Control:
         draw_arc(center + knob_offset, 28.0, 0.0, TAU, 32, Color(1.0, 0.84, 0.56, 0.95), 2.0, true)
 
 
-var joystick: VirtualJoystick
+var joystick: AzaelVirtualJoystick
 var joystick_touch_index: int = -1
 var controls_enabled: bool = true
 
@@ -72,8 +72,8 @@ func _input(event: InputEvent) -> void:
 
 
 func _build_joystick() -> void:
-    joystick = VirtualJoystick.new()
-    joystick.name = "VirtualJoystick"
+    joystick = AzaelVirtualJoystick.new()
+    joystick.name = "AzaelVirtualJoystick"
     joystick.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
     joystick.offset_left = 24.0
     joystick.offset_top = -188.0
