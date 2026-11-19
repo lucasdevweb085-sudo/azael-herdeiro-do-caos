@@ -39,6 +39,10 @@ func _test_hold_button() -> void:
 
     defend_button.button_down.emit()
     assert(Input.is_action_pressed("block"), "DEFENDER deve ativar a defesa enquanto pressionado")
+
+    controls.call("_release_joystick")
+    assert(Input.is_action_pressed("block"), "Soltar o joystick não pode cancelar a defesa mantida por outro dedo")
+
     controls.set_controls_enabled(false)
     assert(not Input.is_action_pressed("block"), "Desativar controles deve liberar a defesa")
 
