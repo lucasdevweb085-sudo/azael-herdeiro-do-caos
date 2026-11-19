@@ -165,4 +165,5 @@ func _build_save_button() -> void:
     button.offset_top = 20.0
     button.offset_right = -20.0
     button.offset_bottom = 66.0
+    button.custom_minimum_size = Vector2(92.0, 46.0)
     add_child(button)
