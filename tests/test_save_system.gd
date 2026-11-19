@@ -47,7 +47,7 @@ func _initialize() -> void:
 
 func _run_save_load_round_trip() -> void:
     await process_frame
-    if not _test_save_load_round_trip():
+    if not await _test_save_load_round_trip():
         quit(1)
         return
 
