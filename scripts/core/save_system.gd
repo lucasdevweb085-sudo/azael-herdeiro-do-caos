@@ -14,11 +14,13 @@ var last_error: Error = OK
 static func is_valid_payload(payload: Variant) -> bool:
     if not (payload is Dictionary):
         return false
-    if int(payload.get("version", 0)) != SAVE_VERSION:
+    if not payload.has("version") or typeof(payload["version"]) != TYPE_INT:
         return false
-    var game_data: Variant = payload.get("game_state", {})
-    var extra_data: Variant = payload.get("extra_state", {})
-    return game_data is Dictionary and extra_data is Dictionary
+    if int(payload["version"]) != SAVE_VERSION:
+        return false
+    if not payload.has("game_state") or not payload.has("extra_state"):
+        return false
+    return payload["game_state"] is Dictionary and payload["extra_state"] is Dictionary
 
 
 func has_save() -> bool:
