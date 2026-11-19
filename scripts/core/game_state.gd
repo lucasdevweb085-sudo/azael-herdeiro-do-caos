@@ -1,5 +1,5 @@
 extends Node
-## Estado global de história. Persistência em disco será adicionada depois.
+## Estado global de história, persistido localmente pelo SaveSystem.
 
 var story_flags: Dictionary = {}
 var relationships: Dictionary = {}

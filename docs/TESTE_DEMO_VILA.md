@@ -46,7 +46,7 @@ Em Android/iOS, a interface de toque aparece automaticamente:
 - Arrastar no lado direito da tela: controlar a câmera.
 - Botões **ATACAR** e **INTERAGIR** no canto inferior direito.
 
-Os controles de esquiva e habilidade serão adicionados na etapa de combate, quando essas ações tiverem comportamento implementado.
+Os controles de esquiva e defesa foram adicionados junto ao protótipo de combate. Habilidades ainda não estão implementadas.
 
 ### Verificação do joystick
 
@@ -58,7 +58,7 @@ godot --headless --path . --script tests/test_mobile_controls.gd
 
 No Windows, use o nome do executável baixado (por exemplo, `Godot_v4.7.2-stable_win64.exe`) no lugar de `godot`.
 
-O teste de joystick verifica a conversão das direções para as quatro ações de movimento. O teste em Android ainda é obrigatório para confirmar gestos, áreas de toque e comportamento em tela real.
+Os testes automatizados cobrem o mapeamento do joystick, o botão de defesa, a validação do formato do salvamento e as regras de dano do combo. Os comandos estão em tests/README.md. O teste em Android ainda é obrigatório para confirmar gestos, áreas de toque e comportamento em tela real.
 
 
 ## Salvamento e carregamento
@@ -66,7 +66,7 @@ O teste de joystick verifica a conversão das direções para as quatro ações 
 - **F5 no PC** ou **SALVAR no Android:** salva o progresso no arquivo local `user://azael_save.json`.
 - **F9 no PC:** carrega o último salvamento.
 - Ao iniciar o jogo, o último salvamento é carregado automaticamente.
-- O jogo salva automaticamente depois de uma escolha narrativa, ao derrotar o inimigo e quando o aplicativo é pausado/fechado.
+- O jogo salva automaticamente depois de uma escolha narrativa, ao derrotar o inimigo e quando o aplicativo é pausado/fechado. Ao iniciar, a flag de inimigo derrotado é respeitada para que o alvo não reapareça após reiniciar.
 - O arquivo contém decisões, flags de história, relações, posição de Azael e vida. Os dados de missões e evolução serão incorporados pelas próximas etapas.
 
 Para verificar o arquivo no editor, abra **Projeto → Abrir pasta de dados do projeto** (ou use a pasta de dados do usuário do Godot). O arquivo fica no diretório de usuário do aplicativo, não dentro da pasta do repositório.
@@ -82,3 +82,13 @@ Para verificar o arquivo no editor, abra **Projeto → Abrir pasta de dados do p
 - A barra/valor de vigor será exibida junto à interface na etapa de evolução da interface.
 
 Essas ações ainda usam modelos provisórios e não têm animações definitivas. O comportamento precisa ser validado no Godot.
+
+
+### Teste de retomada após derrotar o inimigo
+
+1. Inicie a vila e derrote o alvo de treinamento.
+2. Aguarde a mensagem de confirmação do salvamento automático.
+3. Feche o jogo e abra novamente.
+4. Confirme que o alvo continua derrotado e que a posição/vida salvas foram recuperadas.
+
+Se o alvo reaparecer, envie a mensagem da aba Saída do Godot.

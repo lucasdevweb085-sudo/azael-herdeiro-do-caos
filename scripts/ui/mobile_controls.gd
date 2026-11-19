@@ -86,7 +86,7 @@ func _build_action_buttons() -> void:
     var row := HBoxContainer.new()
     row.name = "ActionButtons"
     row.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
-    row.offset_left = -360.0
+    row.offset_left = -432.0
     row.offset_top = -112.0
     row.offset_right = -20.0
     row.offset_bottom = -20.0
@@ -99,7 +99,7 @@ func _build_action_buttons() -> void:
     row.add_child(_create_hold_button("DEFENDER", "block"))
 
 
-func _create_action_button(label_text: String, action_name: String) -> Button:
+func _create_action_button(label_text: String, action_name: String, emit_on_press: bool = true) -> Button:
     var button := Button.new()
     button.text = label_text
     button.custom_minimum_size = Vector2(94.0, 84.0)
@@ -119,14 +119,13 @@ func _create_action_button(label_text: String, action_name: String) -> Button:
     var pressed_style := normal_style.duplicate() as StyleBoxFlat
     pressed_style.bg_color = Color(0.22, 0.17, 0.10, 0.92)
     button.add_theme_stylebox_override("pressed", pressed_style)
-    button.pressed.connect(_emit_action.bind(action_name))
+    if emit_on_press:
+        button.pressed.connect(_emit_action.bind(action_name))
     return button
 
 
-
 func _create_hold_button(label_text: String, action_name: String) -> Button:
-    var button := _create_action_button(label_text, "")
-    button.pressed.disconnect(_emit_action)
+    var button := _create_action_button(label_text, action_name, false)
     button.button_down.connect(_set_held_action.bind(action_name, true))
     button.button_up.connect(_set_held_action.bind(action_name, false))
     return button
@@ -151,7 +150,7 @@ func _update_joystick(screen_position: Vector2) -> void:
         if strength > 0.001:
             Input.action_press(StringName(action_name), strength)
         else:
-            Input.action_release(StringName(action_name))
+            Input.action_release(action_name)
 
 
 func _release_joystick() -> void:
@@ -173,9 +172,7 @@ func set_controls_enabled(enabled: bool) -> void:
 
 func _notification(what: int) -> void:
     if what == NOTIFICATION_PREDELETE or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
-        for action_name in MOVEMENT_ACTIONS:
-            Input.action_release(action_name)
-        Input.action_release("block")
+        _release_joystick()
 
 
 func _build_save_button() -> void:

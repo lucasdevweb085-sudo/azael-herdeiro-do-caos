@@ -122,6 +122,10 @@ func _create_npc() -> void:
     npc.add_child(marker)
 
 func _create_enemy() -> void:
+    # A flag é carregada antes da criação da vila; inimigo derrotado não reaparece ao reiniciar.
+    if bool(GameState.get_flag("training_enemy_defeated", false)) or is_instance_valid(enemy):
+        return
+
     var enemy_body := CharacterBody3D.new()
     enemy_body.name = "InimigoDeTreinamento"
     enemy_body.set_script(load("res://scripts/combat/training_enemy.gd"))
