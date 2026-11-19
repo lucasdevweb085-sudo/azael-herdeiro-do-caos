@@ -26,10 +26,16 @@ func has_save() -> bool:
 
 
 func save_game(extra_state: Dictionary = {}) -> bool:
+    var game_state := get_node_or_null("/root/GameState")
+    if game_state == null or not game_state.has_method("export_state"):
+        last_error = ERR_DOES_NOT_EXIST
+        push_error("AZAEL: o autoload GameState não está disponível para salvar.")
+        return false
+
     var payload := {
         "version": SAVE_VERSION,
         "saved_at": Time.get_datetime_string_from_system(),
-        "game_state": GameState.export_state(),
+        "game_state": game_state.call("export_state"),
         "extra_state": extra_state.duplicate(true)
     }
 
@@ -78,7 +84,12 @@ func load_game() -> Dictionary:
         push_error("AZAEL: arquivo de salvamento inválido ou de versão incompatível.")
         return {}
 
-    GameState.import_state(parsed.get("game_state", {}))
+    var game_state := get_node_or_null("/root/GameState")
+    if game_state == null or not game_state.has_method("import_state"):
+        last_error = ERR_DOES_NOT_EXIST
+        push_error("AZAEL: o autoload GameState não está disponível para carregar.")
+        return {}
+    game_state.call("import_state", parsed.get("game_state", {}))
 
     var root := get_tree().root
     var quest_manager := root.get_node_or_null("QuestManager")
