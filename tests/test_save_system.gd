@@ -42,6 +42,11 @@ func _initialize() -> void:
         quit(1)
         return
 
+    call_deferred("_run_save_load_round_trip")
+
+
+func _run_save_load_round_trip() -> void:
+    await process_frame
     if not _test_save_load_round_trip():
         quit(1)
         return
@@ -69,6 +74,7 @@ func _test_save_load_round_trip() -> bool:
     var save_system = SaveSystemScript.new()
     save_system.name = "SaveSystem"
     root.add_child(save_system)
+    await process_frame
 
     game_state.call("set_flag", "save_round_trip_flag", true)
     game_state.call("change_relationship", "village", 3)
