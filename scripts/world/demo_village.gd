@@ -24,6 +24,8 @@ var material_cache: Dictionary = {}
 
 func _ready() -> void:
     player.add_to_group("player")
+    var saved_scene_state := SaveSystem.load_game()
+    _restore_scene_state(saved_scene_state)
     _build_village()
     _create_npc()
     _create_enemy()
@@ -35,6 +37,10 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
     if dialogue_open:
         return
+    if Input.is_action_just_pressed("save_game"):
+        _save_game()
+    if Input.is_action_just_pressed("load_game"):
+        _load_game()
     if Input.is_action_just_pressed("interact"):
         _try_interact()
     if Input.is_action_just_pressed("attack"):
@@ -152,9 +158,9 @@ func _create_enemy() -> void:
 
 func _create_interface() -> void:
     if OS.get_name() == "Android" or OS.get_name() == "iOS":
-        status_label.text = "AZAEL — VILA DE TESTE\nJoystick: mover | Arraste à direita: câmera | Botões: interagir/atacar"
+        status_label.text = "AZAEL — VILA DE TESTE\nJoystick: mover | Arraste à direita: câmera | Botões: ação | SALVAR"
     else:
-        status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: atacar | F7: qualidade"
+        status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: atacar | F5: salvar | F9: carregar | F7: qualidade"
     status_label.add_theme_font_size_override("font_size", 16)
 
     if OS.get_name() == "Android" or OS.get_name() == "iOS":
@@ -210,6 +216,49 @@ func _on_mobile_action(action_name: String) -> void:
             _try_interact()
         "attack":
             _try_attack()
+        "save":
+            _save_game()
+
+
+func _restore_scene_state(data: Dictionary) -> void:
+    if data.has("player_position") and data["player_position"] is Array and data["player_position"].size() == 3:
+        var position_data: Array = data["player_position"]
+        player.position = Vector3(float(position_data[0]), float(position_data[1]), float(position_data[2]))
+    if data.has("player_health"):
+        player_health = clampi(int(data["player_health"]), 0, 100)
+
+
+func _capture_scene_state() -> Dictionary:
+    return {
+        "player_position": [player.position.x, player.position.y, player.position.z],
+        "player_health": player_health
+    }
+
+
+func _save_game() -> void:
+    if SaveSystem.save_game(_capture_scene_state()):
+        _refresh_status("Progresso salvo neste dispositivo.")
+    else:
+        _refresh_status("Não foi possível salvar. Código: %s" % error_string(SaveSystem.last_error))
+
+
+func _load_game() -> void:
+    var data := SaveSystem.load_game()
+    if data.is_empty():
+        _refresh_status("Nenhum salvamento válido foi encontrado.")
+        return
+    _restore_scene_state(data)
+    if GameState.get_flag("training_enemy_defeated", false) and is_instance_valid(enemy):
+        enemy.queue_free()
+        enemy = null
+    elif not GameState.get_flag("training_enemy_defeated", false) and not is_instance_valid(enemy):
+        _create_enemy()
+    _refresh_status("Progresso carregado.")
+
+
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
+        SaveSystem.save_game(_capture_scene_state())
 
 
 func _try_interact() -> void:
@@ -265,6 +314,7 @@ func _on_choice_button_pressed(option_id: String) -> void:
             GameState.apply_choice_effects(str(current_dialogue.get("id", "unknown")), option)
             GameState.set_flag("village_first_choice_complete", true)
             last_choice_result = str(option.get("result_text", "Sua decisão foi registrada."))
+            SaveSystem.save_game(_capture_scene_state())
             break
 
     dialogue_open = false
@@ -304,6 +354,7 @@ func _on_player_hit(damage: int) -> void:
 func _on_enemy_defeated() -> void:
     GameState.set_flag("training_enemy_defeated", true)
     enemy = null
+    SaveSystem.save_game(_capture_scene_state())
     _refresh_status("Alvo derrotado! Primeiro teste de combate concluído.")
 
 func _refresh_status(message: String) -> void:

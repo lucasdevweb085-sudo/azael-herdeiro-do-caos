@@ -51,6 +51,7 @@ func _ready() -> void:
     mouse_filter = Control.MOUSE_FILTER_IGNORE
     _build_joystick()
     _build_action_buttons()
+    _build_save_button()
 
 
 func _input(event: InputEvent) -> void:
@@ -155,3 +156,13 @@ func _notification(what: int) -> void:
     if what == NOTIFICATION_PREDELETE or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
         for action_name in MOVEMENT_ACTIONS:
             Input.action_release(action_name)
+
+
+func _build_save_button() -> void:
+    var button := _create_action_button("SALVAR", "save")
+    button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+    button.offset_left = -112.0
+    button.offset_top = 20.0
+    button.offset_right = -20.0
+    button.offset_bottom = 66.0
+    add_child(button)

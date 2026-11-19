@@ -59,3 +59,14 @@ godot --headless --path . --script tests/test_mobile_controls.gd
 No Windows, use o nome do executável baixado (por exemplo, `Godot_v4.7.2-stable_win64.exe`) no lugar de `godot`.
 
 O teste de joystick verifica a conversão das direções para as quatro ações de movimento. O teste em Android ainda é obrigatório para confirmar gestos, áreas de toque e comportamento em tela real.
+
+
+## Salvamento e carregamento
+
+- **F5 no PC** ou **SALVAR no Android:** salva o progresso no arquivo local `user://azael_save.json`.
+- **F9 no PC:** carrega o último salvamento.
+- Ao iniciar o jogo, o último salvamento é carregado automaticamente.
+- O jogo salva automaticamente depois de uma escolha narrativa, ao derrotar o inimigo e quando o aplicativo é pausado/fechado.
+- O arquivo contém decisões, flags de história, relações, posição de Azael e vida. Os dados de missões e evolução serão incorporados pelas próximas etapas.
+
+Para verificar o arquivo no editor, abra **Projeto → Abrir pasta de dados do projeto** (ou use a pasta de dados do usuário do Godot). O arquivo fica no diretório de usuário do aplicativo, não dentro da pasta do repositório.

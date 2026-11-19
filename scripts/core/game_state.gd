@@ -32,3 +32,26 @@ func apply_choice_effects(dialogue_id: String, option: Dictionary) -> void:
         set_flag(str(flag), true)
     for change in option.get("relationship_changes", []):
         change_relationship(str(change.get("character", "unknown")), int(change.get("amount", 0)))
+
+
+func export_state() -> Dictionary:
+    return {
+        "story_flags": story_flags.duplicate(true),
+        "relationships": relationships.duplicate(true),
+        "decisions": decisions.duplicate(true)
+    }
+
+
+func import_state(data: Dictionary) -> void:
+    var flags: Variant = data.get("story_flags", {})
+    var relation_data: Variant = data.get("relationships", {})
+    var decision_data: Variant = data.get("decisions", [])
+
+    story_flags = flags.duplicate(true) if flags is Dictionary else {}
+    relationships = relation_data.duplicate(true) if relation_data is Dictionary else {}
+
+    decisions.clear()
+    if decision_data is Array:
+        for decision in decision_data:
+            if decision is Dictionary:
+                decisions.append(decision.duplicate(true))
