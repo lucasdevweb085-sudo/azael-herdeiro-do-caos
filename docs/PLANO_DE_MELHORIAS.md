@@ -22,15 +22,15 @@ As cinco melhorias serão desenvolvidas **uma por vez**. A implementação de ca
 ## Estado atual
 
 - [x] Sequência de cinco melhorias organizada.
-- [~] Etapa 1 — Controles: código presente; falta validar no editor Godot e em tela Android.
-- [~] Etapa 2 — Salvamento: JSON local versionado e carregamento manual/automático implementados parcialmente; falta validar escrita, leitura e retomada do estado.
-- [~] Etapa 3 — Combate: combos, esquiva, defesa e sinalização do golpe inimigo implementados como protótipo; faltam habilidades, padrões de chefes e validação no Godot.
+- [~] Etapa 1 — Controles: joystick, câmera por toque e botões implementados; teste automatizado do mapeamento e do botão DEFENDER passou no Godot 4.7.2 (CI). Falta teste em Android real.
+- [~] Etapa 2 — Salvamento: JSON local versionado, validação de payload, atalhos e teste automatizado de gravação/leitura passaram no Godot 4.7.2 (CI). Falta validar retomada manualmente no notebook e em Android.
+- [~] Etapa 3 — Combate: combos, esquiva, defesa e sinalização do golpe inimigo implementados como protótipo; testes de dano do combo e limites de dano do inimigo passaram no Godot 4.7.2 (CI). Faltam habilidades, padrões de chefes e validação de jogabilidade.
 - [ ] Etapa 4 — Exploração e missões.
 - [ ] Etapa 5 — Evolução dos personagens.
 
 ## Pendências de validação
 
-1. Executar os três testes automatizados listados em tests/README.md.
+1. [x] Executar os três testes automatizados listados em tests/README.md no GitHub Actions com Godot 4.7.2 (última validação aprovada no commit 0f9ab985718d267b356c13cc2f85681bb9510c4f).
 2. Abrir a vila e conferir movimentação, câmera, diálogo, combate e perfis gráficos no notebook.
 3. Reabrir o jogo após derrotar o inimigo e confirmar que ele continua derrotado.
 4. Em Android, testar joystick, câmera por gesto, botões simultâneos e liberação de comandos ao abrir diálogo ou perder foco.
