@@ -65,7 +65,10 @@ func _apply_gravity(delta: float) -> void:
         velocity.y -= 18.0 * delta
 
 func take_damage(amount: int) -> void:
-    health = maxi(health - amount, 0)
     if health <= 0:
+        return
+
+    health = maxi(health - maxi(amount, 0), 0)
+    if health == 0:
         defeated.emit()
         queue_free()
