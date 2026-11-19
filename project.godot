@@ -64,5 +64,5 @@ dodge={
 }
 block={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"physical_keycode":4194324)]
+"events": [Object(InputEventKey,"physical_keycode":4194325)]
 }
