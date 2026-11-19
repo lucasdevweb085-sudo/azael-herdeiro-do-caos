@@ -23,7 +23,19 @@ static func is_valid_payload(payload: Variant) -> bool:
         return false
     if not payload.has("game_state") or not payload.has("extra_state"):
         return false
-    return payload["game_state"] is Dictionary and payload["extra_state"] is Dictionary
+
+    var game_data: Variant = payload["game_state"]
+    var extra_data: Variant = payload["extra_state"]
+    if not (game_data is Dictionary) or not (extra_data is Dictionary):
+        return false
+    if not game_data.has("story_flags") or not game_data.has("relationships") or not game_data.has("decisions"):
+        return false
+
+    return (
+        game_data["story_flags"] is Dictionary
+        and game_data["relationships"] is Dictionary
+        and game_data["decisions"] is Array
+    )
 
 
 func has_save() -> bool:
