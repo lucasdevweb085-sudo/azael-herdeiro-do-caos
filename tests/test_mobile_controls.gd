@@ -24,8 +24,14 @@ func _initialize() -> void:
         quit(1)
         return
 
+    call_deferred("_test_action_buttons")
+
+
+func _test_action_buttons() -> void:
     var controls := MobileControlsScript.new()
     root.add_child(controls)
+    await process_frame
+
     var action_row := controls.get_node_or_null("ActionButtons") as HBoxContainer
     if not _check(action_row != null and action_row.get_child_count() == 4, "Os quatro botões de ação precisam ser criados"):
         controls.queue_free()
@@ -59,7 +65,7 @@ func _initialize() -> void:
         return
 
     controls.queue_free()
-    print("OK: joystick mapping and independent hold-button state")
+    print("OK: joystick mapping and real hold-button signals")
     quit()
 
 
