@@ -13,6 +13,10 @@ func _initialize() -> void:
     if not _check(SaveSystemScript.is_valid_payload(valid_payload), "Payload válido foi rejeitado"):
         quit(1)
         return
+    var json_round_trip: Variant = JSON.parse_string(JSON.stringify(valid_payload))
+    if not _check(SaveSystemScript.is_valid_payload(json_round_trip), "Payload válido serializado em JSON foi rejeitado"):
+        quit(1)
+        return
     if not _check(not SaveSystemScript.is_valid_payload({"version": 2, "game_state": {}, "extra_state": {}}), "Versão incompatível foi aceita"):
         quit(1)
         return
