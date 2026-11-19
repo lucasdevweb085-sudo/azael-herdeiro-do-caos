@@ -154,13 +154,14 @@ func _create_enemy() -> void:
     enemy_body.add_child(marker)
 
     enemy_body.connect("player_hit", Callable(self, "_on_player_hit"))
+    enemy_body.connect("attack_windup_started", Callable(self, "_on_enemy_attack_windup"))
     enemy_body.connect("defeated", Callable(self, "_on_enemy_defeated"))
 
 func _create_interface() -> void:
     if OS.get_name() == "Android" or OS.get_name() == "iOS":
-        status_label.text = "AZAEL — VILA DE TESTE\nJoystick: mover | Arraste à direita: câmera | Botões: ação | SALVAR"
+        status_label.text = "AZAEL — VILA DE TESTE\nJoystick: mover | Arraste: câmera | Atacar, esquivar e defender | SALVAR"
     else:
-        status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: atacar | F5: salvar | F9: carregar | F7: qualidade"
+        status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: combo | Q: esquivar | Shift: defender | F5/F9: salvar/carregar | F7: qualidade"
     status_label.add_theme_font_size_override("font_size", 16)
 
     if OS.get_name() == "Android" or OS.get_name() == "iOS":
@@ -216,6 +217,9 @@ func _on_mobile_action(action_name: String) -> void:
             _try_interact()
         "attack":
             _try_attack()
+        "dodge":
+            if player.has_method("perform_dodge") and not bool(player.call("perform_dodge")):
+                _refresh_status("A esquiva precisa de vigor e tempo de recarga.")
         "save":
             _save_game()
 
@@ -338,18 +342,29 @@ func _try_attack() -> void:
         _refresh_status("Aproxime-se do alvo vermelho para acertar o ataque.")
         return
 
-    enemy.call("take_damage", 10)
+    var damage := int(player.call("get_combo_attack_damage", 10))
+    enemy.call("take_damage", damage)
     if is_instance_valid(enemy):
         _refresh_status("Ataque acertou! Vida do alvo: %d." % int(enemy.get("health")))
     else:
         _refresh_status("Alvo derrotado!")
 
 func _on_player_hit(damage: int) -> void:
-    player_health = maxi(player_health - damage, 0)
+    var applied_damage := damage
+    if player.has_method("receive_hit"):
+        applied_damage = int(player.call("receive_hit", damage))
+    if applied_damage == 0:
+        _refresh_status("Você evitou o golpe com a esquiva!")
+        return
+    player_health = maxi(player_health - applied_damage, 0)
     if player_health == 0:
         _refresh_status("Você ficou sem vida. Reinicie a cena para tentar novamente.")
     else:
         _refresh_status("O inimigo acertou você. Afaste-se ou derrote-o!")
+
+func _on_enemy_attack_windup() -> void:
+    _refresh_status("O inimigo está preparando um golpe! Esquive ou defenda.")
+
 
 func _on_enemy_defeated() -> void:
     GameState.set_flag("training_enemy_defeated", true)

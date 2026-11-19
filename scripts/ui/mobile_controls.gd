@@ -86,15 +86,17 @@ func _build_action_buttons() -> void:
     var row := HBoxContainer.new()
     row.name = "ActionButtons"
     row.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
-    row.offset_left = -224.0
+    row.offset_left = -360.0
     row.offset_top = -112.0
-    row.offset_right = -24.0
-    row.offset_bottom = -24.0
+    row.offset_right = -20.0
+    row.offset_bottom = -20.0
     row.add_theme_constant_override("separation", 12)
     add_child(row)
 
     row.add_child(_create_action_button("INTERAGIR", "interact"))
     row.add_child(_create_action_button("ATACAR", "attack"))
+    row.add_child(_create_action_button("ESQUIVAR", "dodge"))
+    row.add_child(_create_hold_button("DEFENDER", "block"))
 
 
 func _create_action_button(label_text: String, action_name: String) -> Button:
@@ -121,6 +123,22 @@ func _create_action_button(label_text: String, action_name: String) -> Button:
     return button
 
 
+
+func _create_hold_button(label_text: String, action_name: String) -> Button:
+    var button := _create_action_button(label_text, "")
+    button.pressed.disconnect(_emit_action)
+    button.button_down.connect(_set_held_action.bind(action_name, true))
+    button.button_up.connect(_set_held_action.bind(action_name, false))
+    return button
+
+
+func _set_held_action(action_name: String, pressed: bool) -> void:
+    if pressed and controls_enabled:
+        Input.action_press(StringName(action_name))
+    else:
+        Input.action_release(StringName(action_name))
+
+
 func _emit_action(action_name: String) -> void:
     if controls_enabled:
         action_triggered.emit(action_name)
@@ -142,6 +160,7 @@ func _release_joystick() -> void:
         joystick.reset()
     for action_name in MOVEMENT_ACTIONS:
         Input.action_release(action_name)
+    Input.action_release("block")
 
 
 func set_controls_enabled(enabled: bool) -> void:
@@ -156,6 +175,7 @@ func _notification(what: int) -> void:
     if what == NOTIFICATION_PREDELETE or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
         for action_name in MOVEMENT_ACTIONS:
             Input.action_release(action_name)
+        Input.action_release("block")
 
 
 func _build_save_button() -> void:

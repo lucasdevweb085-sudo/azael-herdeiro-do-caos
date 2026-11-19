@@ -70,3 +70,15 @@ O teste de joystick verifica a conversão das direções para as quatro ações 
 - O arquivo contém decisões, flags de história, relações, posição de Azael e vida. Os dados de missões e evolução serão incorporados pelas próximas etapas.
 
 Para verificar o arquivo no editor, abra **Projeto → Abrir pasta de dados do projeto** (ou use a pasta de dados do usuário do Godot). O arquivo fica no diretório de usuário do aplicativo, não dentro da pasta do repositório.
+
+
+## Combate aprimorado
+
+- **F:** sequência de três golpes; o dano aumenta se os ataques forem encadeados rapidamente.
+- **Q:** esquiva com custo de vigor, recarga e breve janela de invulnerabilidade.
+- **Shift pressionado:** defesa reduzindo o dano, com consumo contínuo e por golpe de vigor.
+- No Android, use os botões **ESQUIVAR** e **DEFENDER**.
+- O inimigo sinaliza antes de atacar; esquive ou segure a defesa para reduzir o dano.
+- A barra/valor de vigor será exibida junto à interface na etapa de evolução da interface.
+
+Essas ações ainda usam modelos provisórios e não têm animações definitivas. O comportamento precisa ser validado no Godot.

@@ -57,3 +57,12 @@ load_game={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"physical_keycode":4194339)]
 }
+
+dodge={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":81)]
+}
+block={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":4194324)]
+}
