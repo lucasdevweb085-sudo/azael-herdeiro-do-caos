@@ -159,7 +159,6 @@ func _release_joystick() -> void:
         joystick.reset()
     for action_name in MOVEMENT_ACTIONS:
         Input.action_release(action_name)
-    Input.action_release("block")
 
 
 func set_controls_enabled(enabled: bool) -> void:
@@ -168,11 +167,13 @@ func set_controls_enabled(enabled: bool) -> void:
     visible = enabled
     if not enabled:
         _release_joystick()
+        Input.action_release("block")
 
 
 func _notification(what: int) -> void:
     if what == NOTIFICATION_PREDELETE or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
         _release_joystick()
+        Input.action_release("block")
 
 
 func _build_save_button() -> void:
