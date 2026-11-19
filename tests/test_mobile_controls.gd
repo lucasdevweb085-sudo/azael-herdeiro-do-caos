@@ -23,7 +23,7 @@ func _initialize() -> void:
 
 
 func _test_hold_button() -> void:
-    var controls := MobileControlsScript.new() as Control
+    var controls = MobileControlsScript.new()
     root.add_child(controls)
     await process_frame
 

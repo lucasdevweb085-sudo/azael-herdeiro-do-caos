@@ -25,7 +25,7 @@ func _initialize() -> void:
     quit()
 
 
-func _assert_key_action(action_name: StringName, expected_key: Key) -> void:
+func _assert_key_action(action_name: StringName, expected_key: int) -> void:
     assert(InputMap.has_action(action_name), "A ação %s precisa existir" % action_name)
     var events := InputMap.action_get_events(action_name)
     assert(not events.is_empty(), "A ação %s precisa ter uma tecla" % action_name)
