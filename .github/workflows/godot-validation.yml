@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: godot-validation-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -29,14 +33,17 @@ jobs:
           mv "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
 
       - name: Import project and check the main scene
-        run: |
-          godot --version
-          godot --headless --editor --path . --quit
-          godot --headless --path . --quit-after 10
-
-      - name: Run GDScript tests
+        shell: bash
         run: |
           set -euo pipefail
-          godot --headless --path . --script tests/test_mobile_controls.gd
-          godot --headless --path . --script tests/test_save_system.gd
-          godot --headless --path . --script tests/test_combat_rules.gd
+          godot --version
+          godot --headless --editor --path . --quit
+          timeout 60s godot --headless --path . --quit-after 10
+
+      - name: Run GDScript tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 60s godot --headless --path . --script tests/test_mobile_controls.gd
+          timeout 60s godot --headless --path . --script tests/test_save_system.gd
+          timeout 60s godot --headless --path . --script tests/test_combat_rules.gd
