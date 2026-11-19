@@ -10,7 +10,8 @@ class_name PlayerController
 var camera_pitch: float = -0.22
 
 func _ready() -> void:
-    Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+    if OS.get_name() != "Android" and OS.get_name() != "iOS":
+        Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
     spring_arm.rotation.x = camera_pitch
 
 func _unhandled_input(event: InputEvent) -> void:

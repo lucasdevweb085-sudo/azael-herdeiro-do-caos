@@ -62,7 +62,7 @@ func _input(event: InputEvent) -> void:
             joystick_touch_index = event.index
             _update_joystick(event.position)
             get_viewport().set_input_as_handled()
-        elif not event.pressed and event.index == joystick_touch_index:
+        elif (not event.pressed or event.canceled) and event.index == joystick_touch_index:
             _release_joystick()
             get_viewport().set_input_as_handled()
     elif event is InputEventScreenDrag and event.index == joystick_touch_index:
@@ -152,6 +152,6 @@ func set_controls_enabled(enabled: bool) -> void:
 
 
 func _notification(what: int) -> void:
-    if what == NOTIFICATION_PREDELETE:
+    if what == NOTIFICATION_PREDELETE or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
         for action_name in MOVEMENT_ACTIONS:
             Input.action_release(action_name)

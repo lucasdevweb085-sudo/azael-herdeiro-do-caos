@@ -22,7 +22,7 @@ As cinco melhorias serão desenvolvidas **uma por vez**. Cada etapa será integr
 ## Estado atual
 
 - [x] Sequência de cinco melhorias organizada.
-- [ ] Etapa 1 — Controles Android.
+- [~] Etapa 1 — Controles Android (implementada; aguardando validação no Godot e em Android).
 - [ ] Etapa 2 — Salvamento.
 - [ ] Etapa 3 — Combate.
 - [ ] Etapa 4 — Exploração e missões.

@@ -151,7 +151,10 @@ func _create_enemy() -> void:
     enemy_body.connect("defeated", Callable(self, "_on_enemy_defeated"))
 
 func _create_interface() -> void:
-    status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: atacar | F7: qualidade"
+    if OS.get_name() == "Android" or OS.get_name() == "iOS":
+        status_label.text = "AZAEL — VILA DE TESTE\nJoystick: mover | Arraste à direita: câmera | Botões: interagir/atacar"
+    else:
+        status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: atacar | F7: qualidade"
     status_label.add_theme_font_size_override("font_size", 16)
 
     if OS.get_name() == "Android" or OS.get_name() == "iOS":
@@ -252,6 +255,7 @@ func _open_dialogue() -> void:
     dialogue_panel.visible = true
     if is_instance_valid(mobile_controls):
         mobile_controls.call("set_controls_enabled", false)
+    player.set_process_unhandled_input(false)
     player.set_physics_process(false)
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -267,6 +271,7 @@ func _on_choice_button_pressed(option_id: String) -> void:
     dialogue_panel.visible = false
     if is_instance_valid(mobile_controls):
         mobile_controls.call("set_controls_enabled", true)
+    player.set_process_unhandled_input(true)
     player.set_physics_process(true)
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
     _refresh_status(last_choice_result)
