@@ -14,6 +14,7 @@ var dialogue_panel: PanelContainer
 var dialogue_title: Label
 var dialogue_text: Label
 var options_container: VBoxContainer
+var mobile_controls: Control
 
 var current_dialogue: Dictionary = {}
 var dialogue_open: bool = false
@@ -31,18 +32,13 @@ func _ready() -> void:
     GraphicsSettings.apply_recommended()
     _refresh_status("Objetivo: converse com o morador e teste o combate.")
 
-func _unhandled_input(event: InputEvent) -> void:
-    if not (event is InputEventKey):
+func _process(_delta: float) -> void:
+    if dialogue_open:
         return
-    if not event.pressed or event.echo or dialogue_open:
-        return
-
-    if event.keycode == KEY_E:
+    if Input.is_action_just_pressed("interact"):
         _try_interact()
-        get_viewport().set_input_as_handled()
-    elif event.keycode == KEY_F:
+    if Input.is_action_just_pressed("attack"):
         _try_attack()
-        get_viewport().set_input_as_handled()
 
 func _build_village() -> void:
     var ground: MeshInstance3D = get_node("Ground/MeshInstance3D")
@@ -158,6 +154,14 @@ func _create_interface() -> void:
     status_label.text = "AZAEL — VILA DE TESTE\nWASD: mover | Mouse: câmera | E: conversar | F: atacar | F7: qualidade"
     status_label.add_theme_font_size_override("font_size", 16)
 
+    if OS.get_name() == "Android" or OS.get_name() == "iOS":
+        var controls_script := load("res://scripts/ui/mobile_controls.gd") as Script
+        if controls_script != null:
+            mobile_controls = controls_script.new() as Control
+            if mobile_controls != null:
+                mobile_controls.connect("action_triggered", Callable(self, "_on_mobile_action"))
+                ui_layer.add_child(mobile_controls)
+
     information_label = Label.new()
     information_label.position = Vector2(18, 105)
     information_label.size = Vector2(640, 70)
@@ -194,6 +198,16 @@ func _create_interface() -> void:
     options_container = VBoxContainer.new()
     options_container.add_theme_constant_override("separation", 8)
     layout.add_child(options_container)
+
+func _on_mobile_action(action_name: String) -> void:
+    if dialogue_open:
+        return
+    match action_name:
+        "interact":
+            _try_interact()
+        "attack":
+            _try_attack()
+
 
 func _try_interact() -> void:
     if not is_instance_valid(npc):
@@ -236,6 +250,8 @@ func _open_dialogue() -> void:
 
     dialogue_open = true
     dialogue_panel.visible = true
+    if is_instance_valid(mobile_controls):
+        mobile_controls.call("set_controls_enabled", false)
     player.set_physics_process(false)
     Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -249,6 +265,8 @@ func _on_choice_button_pressed(option_id: String) -> void:
 
     dialogue_open = false
     dialogue_panel.visible = false
+    if is_instance_valid(mobile_controls):
+        mobile_controls.call("set_controls_enabled", true)
     player.set_physics_process(true)
     Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
     _refresh_status(last_choice_result)

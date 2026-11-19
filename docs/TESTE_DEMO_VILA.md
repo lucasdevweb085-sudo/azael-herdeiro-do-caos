@@ -30,3 +30,32 @@ Esta etapa adiciona uma vila provisória para validar os sistemas básicos. Os m
 ## Como relatar um problema
 
 Envie uma captura de tela do erro ou copie o texto que aparece nas abas **Erros** e **Saída** do Godot. Diga também em qual passo aconteceu.
+
+
+## Controles da primeira etapa Android
+
+No notebook, os controles continuam sendo:
+- WASD: movimentar.
+- Mouse: controlar a câmera.
+- E: conversar com o morador.
+- F: atacar o alvo.
+- ESC: liberar/capturar o mouse.
+
+Em Android/iOS, a interface de toque aparece automaticamente:
+- Joystick virtual no canto inferior esquerdo: movimentar Azael.
+- Arrastar no lado direito da tela: controlar a câmera.
+- Botões **ATACAR** e **INTERAGIR** no canto inferior direito.
+
+Os controles de esquiva e habilidade serão adicionados na etapa de combate, quando essas ações tiverem comportamento implementado.
+
+### Verificação do joystick
+
+Depois de abrir o projeto no Godot, rode no terminal do sistema, dentro da pasta do projeto:
+
+```bash
+godot --headless --path . --script tests/test_mobile_controls.gd
+```
+
+No Windows, use o nome do executável baixado (por exemplo, `Godot_v4.7.2-stable_win64.exe`) no lugar de `godot`.
+
+O teste de joystick verifica a conversão das direções para as quatro ações de movimento. O teste em Android ainda é obrigatório para confirmar gestos, áreas de toque e comportamento em tela real.

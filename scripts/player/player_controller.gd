@@ -15,11 +15,19 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
     if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-        rotate_y(-event.relative.x * mouse_sensitivity)
-        camera_pitch = clamp(camera_pitch - event.relative.y * mouse_sensitivity, deg_to_rad(-55.0), deg_to_rad(25.0))
-        spring_arm.rotation.x = camera_pitch
+        _rotate_camera(event.relative)
+    elif event is InputEventScreenDrag:
+        var viewport_size := get_viewport().get_visible_rect().size
+        if event.position.x >= viewport_size.x * 0.42 and event.position.y <= viewport_size.y - 150.0:
+            _rotate_camera(event.screen_relative)
     elif event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
         Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_CAPTURED
+
+
+func _rotate_camera(delta_position: Vector2) -> void:
+    rotate_y(-delta_position.x * mouse_sensitivity)
+    camera_pitch = clampf(camera_pitch - delta_position.y * mouse_sensitivity, deg_to_rad(-55.0), deg_to_rad(25.0))
+    spring_arm.rotation.x = camera_pitch
 
 func _physics_process(delta: float) -> void:
     var input_vector := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
