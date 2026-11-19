@@ -7,7 +7,11 @@ const GameStateScript := preload("res://scripts/core/game_state.gd")
 func _initialize() -> void:
     var valid_payload := {
         "version": 1,
-        "game_state": {},
+        "game_state": {
+            "story_flags": {},
+            "relationships": {},
+            "decisions": []
+        },
         "extra_state": {}
     }
     if not _check(SaveSystemScript.is_valid_payload(valid_payload), "Payload válido foi rejeitado"):
@@ -21,6 +25,12 @@ func _initialize() -> void:
         quit(1)
         return
     if not _check(not SaveSystemScript.is_valid_payload({"version": 1, "game_state": []}), "game_state inválido foi aceito"):
+        quit(1)
+        return
+    if not _check(not SaveSystemScript.is_valid_payload({"version": 1, "game_state": {}, "extra_state": {}}), "Estado de história incompleto foi aceito"):
+        quit(1)
+        return
+    if not _check(not SaveSystemScript.is_valid_payload({"version": 1, "game_state": {"story_flags": [], "relationships": {}, "decisions": []}, "extra_state": {}}), "Flags com tipo inválido foram aceitas"):
         quit(1)
         return
     if not _check(not SaveSystemScript.is_valid_payload({"version": 1}), "Payload sem estado obrigatório foi aceito"):
