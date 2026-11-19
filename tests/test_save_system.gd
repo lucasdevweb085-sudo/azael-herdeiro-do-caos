@@ -19,6 +19,15 @@ func _initialize() -> void:
     if not _check(not SaveSystemScript.is_valid_payload({"version": 1, "game_state": []}), "game_state inválido foi aceito"):
         quit(1)
         return
+    if not _check(not SaveSystemScript.is_valid_payload({"version": 1}), "Payload sem estado obrigatório foi aceito"):
+        quit(1)
+        return
+    if not _check(not SaveSystemScript.is_valid_payload({"version": 1, "game_state": {}}), "Payload sem dados extras obrigatórios foi aceito"):
+        quit(1)
+        return
+    if not _check(not SaveSystemScript.is_valid_payload({"version": "1", "game_state": {}, "extra_state": {}}), "Versão em formato incorreto foi aceita"):
+        quit(1)
+        return
     if not _check(not SaveSystemScript.is_valid_payload("invalid"), "Payload que não é dicionário foi aceito"):
         quit(1)
         return
