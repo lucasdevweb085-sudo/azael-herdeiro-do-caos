@@ -14,9 +14,12 @@ var last_error: Error = OK
 static func is_valid_payload(payload: Variant) -> bool:
     if not (payload is Dictionary):
         return false
-    if not payload.has("version") or typeof(payload["version"]) != TYPE_INT:
+    if not payload.has("version"):
         return false
-    if int(payload["version"]) != SAVE_VERSION:
+    var version_value: Variant = payload["version"]
+    if typeof(version_value) != TYPE_INT and typeof(version_value) != TYPE_FLOAT:
+        return false
+    if float(version_value) != float(SAVE_VERSION):
         return false
     if not payload.has("game_state") or not payload.has("extra_state"):
         return false
